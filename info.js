@@ -82,8 +82,8 @@ const games = {
 
 
 
-let games1 = games[prompt('tima')];
-let coef = prompt('kolvo');
+let games1 = games[prompt('Выберите команду:')];
+let coef = prompt('Количество игр с героем, чтобы он отобразился на схеме');
 
 
 
