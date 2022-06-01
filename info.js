@@ -30,7 +30,6 @@ const games = {
     ['sand-king', 'mirana', 'invoker', 'chen', 'wraith-king'],
     ['pangolier', 'witch-doctor', 'outworld-destroyer', 'phantom-lancer', 'ancient-apparition']
   ],
-
   betboom: [
     ['storm-spirit', 'visage', 'underlord', 'ancient-apparition', 'chen'],
     ['mars', 'visage', 'storm-spirit', 'shadow-demon', 'jakiro'],
@@ -53,7 +52,6 @@ const games = {
     ['pangolier', 'death-prophet', 'techies', 'oracle', 'huskar'],
     ['pugna', 'storm-spirit', 'grimstroke', 'spirit-breaker', 'visage']
   ],
-
   eg: [
     ['storm-spirit', 'medusa', 'jakiro', 'mars', 'io'],
     ['storm-spirit', 'medusa', 'death-prophet', 'tidehunter', 'grimstroke'],
@@ -75,19 +73,11 @@ const games = {
     ['enchantress', 'tiny', 'tidehunter', 'rubick', 'void-spirit'],
     ['storm-spirit', 'tusk', 'mars', 'disruptor', 'morphling']
   ]
-
 }
-
-
-
-
 
 let games1 = games[prompt('Выберите команду:')];
 let coef = prompt('Количество игр с героем, чтобы он отобразился на схеме');
-
-
-
-
+let fp = prompt('Кто пикает первым (radiant - 1; dire - 2):');
 const heroes = {};
 
 games1.forEach((item,i) => {
@@ -110,9 +100,6 @@ for (let i in heroes) {
     heroes2[i] = heroes[i];
   };
 };
-
-console.log("done 1")
-
 
 //mas = document.getElementsByClassName("picks-inline")
 //mas1 = []

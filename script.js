@@ -1,5 +1,18 @@
+function pick () {
+  this.classList.add("picked")
+  this.lines.forEach((item, i) => {
+    item.style.borderColor = "#0f0";
+  });
+};
+
+function ban () {
+  this.classList.add("banned")
+  this.lines.forEach((item, i) => {
+    item.remove(item);
+  });
+};
+
 function onDragStart (event) {
-  console.log(this);
   targetEl = this;
 };
 
@@ -14,131 +27,107 @@ function lineUpdate() {
   this.style.transform = "rotate(" + p.toString() + "rad)";
 };
 
-// let el1 = document.getElementById("o1");
-// el1.r = 50;
-// el1.x = 50;
-// el1.y = 50;
-//
-// let el2 = document.getElementById("o2");
-// el2.r = 30;
-// el2.x = 30;
-// el2.y = 30;
-//
-// let el3 = document.getElementById("o3");
-// el3.r = 40;
-// el3.x = 40;
-// el3.y = 40;
-//
-// let el4 = document.getElementById("o4");
-// el4.r = 33;
-// el4.x = 33;
-// el4.y = 33;
-
-var targetEl = null;
-
-// let line1 = document.getElementById("l1");
-// line1.foc = [el1,el2];
-// line1.update1 = lineUpdate;
-// setInterval(() => line1.update1(), 1);
-//
-// let line2 = document.getElementById("l2");
-// line2.foc = [el1,el3];
-// line2.update1 = lineUpdate;
-// setInterval(() => line2.update1(), 1);
-//
-// let line3 = document.getElementById("l3");
-// line3.foc = [el1,el4];
-// line3.update1 = lineUpdate;
-// setInterval(() => line3.update1(), 1);
-//
-// let line4 = document.getElementById("l4");
-// line4.foc = [el3,el4];
-// line4.update1 = lineUpdate;
-// setInterval(() => line4.update1(), 1);
-
-
 function onDragEnd (event) {
   targetEl = null;
 };
 
-let field = document.getElementById("field1")
-field.ondragover = function (event) {
-  if (event.altKey) {
-    targetEl.ban();
+let targetEl = null;
+
+
+(function main () {
+
+  const pickPhase = {
+    fpban:[1,3,9,11,13,19,21],
+    fppick:[5,8,16,18,23],
+    lpban:[2,4,10,12,14,20,22],
+    lppick:[6,7,15,17,24]
   };
-  if (event.ctrlKey) {
-    targetEl.pick();
-  };
-  targetEl.x = event.x;
-  targetEl.style.left = (targetEl.x - targetEl.r).toString() + "px";
-  targetEl.y = event.y;
-  targetEl.style.top = (targetEl.y - targetEl.r).toString() + "px";
-  targetEl.lines.forEach((item, i) => {
-    item.update1();
-  });
 
-};
-
-for (let i in heroes2) {
-  let el = document.createElement("div");
-  el.classList.add("cyrcle");
-  el.classList.add("hero-" + i);
-  el.style.height = (40 + heroes2[i][i]*7).toString() + "px";
-  el.style.width = (40 + heroes2[i][i]*7).toString() + "px";
-  el.style.backgroundPosition = "-10px " + ((40 + heroes2[i][i]*7)*0.12680487804878).toString() + "px";
-
-  el.r = (40 + heroes2[i][i]*7)/2;
-  el.x = el.r + Math.random() * (screen.availWidth - el.r*5);
-  el.y = el.r + Math.random() * (screen.availHeight - el.r*5);
-  el.style.left = (el.x - el.r).toString() + "px";
-  el.style.top = (el.y - el.r).toString() + "px";
-  el.draggable = true;
-  el.ondragstart = onDragStart;
-  el.ondragend = onDragEnd;
-  el.lines = [];
-  el.ban = ban;
-  el.pick = pick;
-  field.appendChild(el);
-  field[i] = el;
-};
-
-
-let heroes3 = {};
-for (let i in heroes2) {
-  heroes3[i] = {};
-  for (let j in heroes2[i]) {
-    if (j!=i && j in heroes2 && !(j in heroes3)) {
-      let line = document.createElement("div");
-      line.classList.add("line");
-      field.appendChild(line);
-      line.foc = [field[i],field[j]];
-      field[i].lines.push(line)
-      field[j].lines.push(line)
-      line.update1 = lineUpdate;
-      line.update1();
+  if (fp == "2") {
+    var pickPhase2 = {
+      rp:pickPhase.lppick,
+      rb:pickPhase.lpban,
+      dp:pickPhase.fppick,
+      db:pickPhase.fpban
+    }
+  } else {
+    var pickPhase2 = {
+      dp:pickPhase.lppick,
+      db:pickPhase.lpban,
+      rp:pickPhase.fppick,
+      rb:pickPhase.fpban
     }
   }
-};
 
-function ban () {
-  this.classList.add("banned")
-  this.lines.forEach((item, i) => {
-    item.remove(item);
-  });
-};
+  for (let t in pickPhase2) {
+    pickPhase2[t].forEach((item, i) => {
+      let el = document.createElement("li");
+      el.classList.add(t);
+      el.innerText = item.toString();
+      document.getElementById(t).appendChild(el);
+    });
 
-function pick () {
-  this.classList.add("picked")
-  this.lines.forEach((item, i) => {
-    item.style.borderColor = "#0f0";
-  });
-};
+  }
+
+  let field = document.getElementById("field1");
+
+  field.ondragover = function (event) {//field onDregOver event
+    if (!targetEl) return 0;
+    if (event.altKey) {
+      targetEl.ban();
+    };
+    if (event.ctrlKey) {
+      targetEl.pick();
+    };
+    targetEl.x = event.x;
+    targetEl.style.left = (targetEl.x - targetEl.r).toString() + "px";
+    targetEl.y = event.y;
+    targetEl.style.top = (targetEl.y - targetEl.r).toString() + "px";
+    targetEl.lines.forEach((item, i) => {
+      item.update1();
+    });
+
+  };
 
 
-// let cyrcles = [el1,el2,el3,el4]
-// cyrcles.forEach((el, i) => {
-//   el.ondragstart = onDragStart;
-//   el.ondragend = onDragEnd;
-// });
 
-console.log("done 2")
+  for (let i in heroes2) {//create hero cyrcles
+    let el = document.createElement("div");
+    el.classList.add("cyrcle");
+    el.classList.add("hero-" + i);
+    el.style.height = (40 + heroes2[i][i]*7).toString() + "px";
+    el.style.width = (40 + heroes2[i][i]*7).toString() + "px";
+    el.style.backgroundPosition = "-10px " + ((40 + heroes2[i][i]*7)*0.12680487804878).toString() + "px";
+
+    el.r = (40 + heroes2[i][i]*7)/2;
+    el.x = el.r + Math.random() * (screen.availWidth - el.r*5);
+    el.y = el.r + Math.random() * (screen.availHeight - el.r*5 - 250) + 200;
+    el.style.left = (el.x - el.r).toString() + "px";
+    el.style.top = (el.y - el.r).toString() + "px";
+    el.draggable = true;
+    el.ondragstart = onDragStart;
+    el.ondragend = onDragEnd;
+    el.lines = [];
+    el.ban = ban;
+    el.pick = pick;
+    field.appendChild(el);
+    field[i] = el;
+  };
+
+  let heroes3 = {};
+  for (let i in heroes2) {//create lines
+    heroes3[i] = {};
+    for (let j in heroes2[i]) {
+      if (j!=i && j in heroes2 && !(j in heroes3)) {
+        let line = document.createElement("div");
+        line.classList.add("line");
+        field.appendChild(line);
+        line.foc = [field[i],field[j]];
+        field[i].lines.push(line)
+        field[j].lines.push(line)
+        line.update1 = lineUpdate;
+        line.update1();
+      }
+    }
+  };
+})()
