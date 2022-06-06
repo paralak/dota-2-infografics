@@ -75,31 +75,7 @@ const games = {
   ]
 }
 
-let games1 = games[prompt('Выберите команду:')];
-let coef = prompt('Количество игр с героем, чтобы он отобразился на схеме');
-let fp = prompt('Кто пикает первым (radiant - 1; dire - 2):');
-const heroes = {};
 
-games1.forEach((item,i) => {
-  item.forEach((her,i) => {
-    if (!(her in heroes)) {
-      heroes[her] = {}}
-    item.forEach((her2,i) => {
-      if (!(her2 in heroes[her])) {
-        heroes[her][her2] = 0
-      }
-      heroes[her][her2]+=1
-    })
-  })
-});
-
-const heroes2 = {};
-
-for (let i in heroes) {
-  if (heroes[i][i]>=coef) {
-    heroes2[i] = heroes[i];
-  };
-};
 
 //mas = document.getElementsByClassName("picks-inline")
 //mas1 = []
