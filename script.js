@@ -1,5 +1,18 @@
+function pick () {
+  this.classList.add("picked")
+  this.lines.forEach((item, i) => {
+    item.style.borderColor = "#0f0";
+  });
+};
+
+function ban () {
+  this.classList.add("banned")
+  this.lines.forEach((item, i) => {
+    item.remove(item);
+  });
+};
+
 function onDragStart (event) {
-  console.log(this);
   targetEl = this;
 };
 
@@ -14,55 +27,77 @@ function lineUpdate() {
   this.style.transform = "rotate(" + p.toString() + "rad)";
 };
 
-// let el1 = document.getElementById("o1");
-// el1.r = 50;
-// el1.x = 50;
-// el1.y = 50;
-//
-// let el2 = document.getElementById("o2");
-// el2.r = 30;
-// el2.x = 30;
-// el2.y = 30;
-//
-// let el3 = document.getElementById("o3");
-// el3.r = 40;
-// el3.x = 40;
-// el3.y = 40;
-//
-// let el4 = document.getElementById("o4");
-// el4.r = 33;
-// el4.x = 33;
-// el4.y = 33;
-
-var targetEl = null;
-
-// let line1 = document.getElementById("l1");
-// line1.foc = [el1,el2];
-// line1.update1 = lineUpdate;
-// setInterval(() => line1.update1(), 1);
-//
-// let line2 = document.getElementById("l2");
-// line2.foc = [el1,el3];
-// line2.update1 = lineUpdate;
-// setInterval(() => line2.update1(), 1);
-//
-// let line3 = document.getElementById("l3");
-// line3.foc = [el1,el4];
-// line3.update1 = lineUpdate;
-// setInterval(() => line3.update1(), 1);
-//
-// let line4 = document.getElementById("l4");
-// line4.foc = [el3,el4];
-// line4.update1 = lineUpdate;
-// setInterval(() => line4.update1(), 1);
-
-
 function onDragEnd (event) {
   targetEl = null;
 };
 
-let field = document.getElementById("field1")
-field.ondragover = function (event) {
+let targetEl = null;
+
+
+
+
+let games1 = games[prompt('Выберите команду:')];
+let coef = prompt('Количество игр с героем, чтобы он отобразился на схеме');
+let fp = prompt('Кто пикает первым (radiant - 1; dire - 2):');
+let lineGameCount = prompt('Количество совместных игр, для отображения связи:');
+const heroes = {};
+
+games1.forEach((item,i) => {
+  item.forEach((her,i) => {
+    if (!(her in heroes)) {
+      heroes[her] = {}}
+    item.forEach((her2,i) => {
+      if (!(her2 in heroes[her])) {
+        heroes[her][her2] = 0
+      }
+      heroes[her][her2]+=1
+    })
+  })
+});
+
+const heroes2 = {};
+
+for (let i in heroes) {
+  if (heroes[i][i]>=coef) {
+    heroes2[i] = heroes[i];
+  };
+};
+
+const pickPhase = {
+  fpban:[1,3,9,11,13,19,21],
+  fppick:[5,8,16,18,23],
+  lpban:[2,4,10,12,14,20,22],
+  lppick:[6,7,15,17,24]
+};
+
+if (fp == "2") {
+  var pickPhase2 = {
+    rp:pickPhase.lppick,
+    rb:pickPhase.lpban,
+    dp:pickPhase.fppick,
+    db:pickPhase.fpban
+  }
+} else {
+  var pickPhase2 = {
+    dp:pickPhase.lppick,
+    db:pickPhase.lpban,
+    rp:pickPhase.fppick,
+    rb:pickPhase.fpban
+  }
+}
+
+for (let t in pickPhase2) {
+  pickPhase2[t].forEach((item, i) => {
+    let el = document.createElement("li");
+    el.classList.add(t);
+    el.innerText = item.toString();
+    document.getElementById(t).appendChild(el);
+  });}
+
+let field = document.getElementById("field1");
+
+field.ondragover = function (event) {//field onDregOver event
+  if (!targetEl) return 0;
   if (event.altKey) {
     targetEl.ban();
   };
@@ -79,7 +114,7 @@ field.ondragover = function (event) {
 
 };
 
-for (let i in heroes2) {
+for (let i in heroes2) {//create hero cyrcles
   let el = document.createElement("div");
   el.classList.add("cyrcle");
   el.classList.add("hero-" + i);
@@ -89,7 +124,7 @@ for (let i in heroes2) {
 
   el.r = (40 + heroes2[i][i]*7)/2;
   el.x = el.r + Math.random() * (screen.availWidth - el.r*5);
-  el.y = el.r + Math.random() * (screen.availHeight - el.r*5);
+  el.y = el.r + Math.random() * (screen.availHeight - el.r*5 - 250) + 200;
   el.style.left = (el.x - el.r).toString() + "px";
   el.style.top = (el.y - el.r).toString() + "px";
   el.draggable = true;
@@ -102,13 +137,14 @@ for (let i in heroes2) {
   field[i] = el;
 };
 
-
 let heroes3 = {};
-for (let i in heroes2) {
+for (let i in heroes2) {//create lines
   heroes3[i] = {};
   for (let j in heroes2[i]) {
-    if (j!=i && j in heroes2 && !(j in heroes3)) {
+    if (j!=i && j in heroes2 && !(j in heroes3) && (heroes2[i][j]>=lineGameCount)) {
       let line = document.createElement("div");
+      line.style.height = (1.6 + heroes2[i][j]*0.8).toString() + "px";
+      line.style.backgroundColor = "rgba(255, 255, 255, " + (heroes2[i][j]/(1+heroes2[i][j]*2)*2-0.2).toString() + ")"
       line.classList.add("line");
       field.appendChild(line);
       line.foc = [field[i],field[j]];
@@ -119,26 +155,3 @@ for (let i in heroes2) {
     }
   }
 };
-
-function ban () {
-  this.classList.add("banned")
-  this.lines.forEach((item, i) => {
-    item.remove(item);
-  });
-};
-
-function pick () {
-  this.classList.add("picked")
-  this.lines.forEach((item, i) => {
-    item.style.borderColor = "#0f0";
-  });
-};
-
-
-// let cyrcles = [el1,el2,el3,el4]
-// cyrcles.forEach((el, i) => {
-//   el.ondragstart = onDragStart;
-//   el.ondragend = onDragEnd;
-// });
-
-console.log("done 2")
