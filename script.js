@@ -83,6 +83,7 @@ for (let i in heroes2) {
   let el = document.createElement("div");
   el.classList.add("cyrcle");
   el.classList.add("hero-" + i);
+  el.style.backgroundImage = allHeroes[i];
   el.style.height = (40 + heroes2[i][i]*7).toString() + "px";
   el.style.width = (40 + heroes2[i][i]*7).toString() + "px";
   el.style.backgroundPosition = "-10px " + ((40 + heroes2[i][i]*7)*0.12680487804878).toString() + "px";
