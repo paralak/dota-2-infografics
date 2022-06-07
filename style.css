@@ -1,7 +1,13 @@
 * {
   margin: 0;
   box-sizing: border-box;
+  overflow: hidden;
 }
+
+ul {
+  padding: 0;
+}
+
 
 
 .cyrcle {
@@ -15,6 +21,55 @@
   border: 2px solid white;
 }
 
+.radiant p, .dire p {
+  text-transform: uppercase;
+  font-family: 'Bebas Neue', cursive;
+  text-align: center;
+  font-size: 260%;
+  font-family: 'Kanit', sans-serif;
+  line-height:1.2;
+}
+
+
+.radiant .ban li, .dire .ban li {
+  display: inline-block;
+  height:36px;
+  width:64px;
+  background: rgb(2,0,36);
+  background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
+  margin: 0 8px 16px;
+  font-size: 160%;
+  color: #ccc;
+  line-height: 1.55;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  user-select: none;
+}
+
+.radiant, .dire {
+  /* border: 1px solid black; */
+  display:inline-block;
+}
+
+.dire {
+  float:right;
+}
+
+.radiant .pick li, .dire .pick li {
+  display: inline-block;
+  height:54px;
+  width:96px;
+  background: rgb(2,0,36);
+  background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
+  margin: 0 8px;
+  font-size: 240%;
+  color: #ccc;
+  line-height: 1.55;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  user-select: none;
+}
+
 .banned {
   display: none;
 }
@@ -22,8 +77,9 @@
 .line {
   transform-origin: left top;
   z-index: 1;
-  border: 1.2px solid #fff8;
-  height: 0;
+  /* border: 1.2px solid #fff8; */
+  background: #fff8;
+  height: 2.4px;
   position: absolute;
 }
 
@@ -31,4 +87,5 @@
   background-color: #0aa;
   height: 100vh;
   width: 100%;
+  padding:0 30px;
 }
