@@ -49,6 +49,7 @@ ul {
 .radiant, .dire {
   /* border: 1px solid black; */
   display:inline-block;
+  visibility: hidden;
 }
 
 .dire {
