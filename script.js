@@ -90,8 +90,22 @@ for (let t in pickPhase2) {
   pickPhase2[t].forEach((item, i) => {
     let el = document.createElement("li");
     el.classList.add(t);
-    el.innerText = item.toString();
     document.getElementById(t).appendChild(el);
+    let el2 = document.createElement("select");
+    el2.classList.add("select-in-picks");
+    //el2.style.display = "none";
+    let el4 = document.createElement("option");
+    el4.value = "none";
+    el4.innerText = item.toString();
+    el2.appendChild(el4);
+    for (let j in allHeroes) {
+      let el3 = document.createElement("option");
+      el3.value = j;
+      el3.innerText = j;
+      el2.appendChild(el3);
+    };
+    el.appendChild(el2);
+    el.optionEl = el2;
   });}
 
 let field = document.getElementById("field1");
