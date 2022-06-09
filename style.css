@@ -43,7 +43,6 @@ ul {
   background: rgb(2,0,36);
   background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
   margin: 0 8px 16px;
-  font-style: 160%;
   user-select: none;
 }
 
@@ -64,6 +63,7 @@ ul {
   font-family: 'Bebas Neue', cursive;
   font-size: 100%;
   user-select: none;
+  background-size: 100%;
 }
 
 .select-in-picks option {

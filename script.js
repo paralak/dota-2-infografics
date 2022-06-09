@@ -93,6 +93,11 @@ for (let t in pickPhase2) {
     document.getElementById(t).appendChild(el);
     let el2 = document.createElement("select");
     el2.classList.add("select-in-picks");
+    el2.onchange = function selectOnChange () {
+      console.log(Object.keys(allHeroes)[this.selectedIndex-1]);
+      this.style.backgroundImage = allHeroes[Object.keys(allHeroes)[this.selectedIndex-1]];
+      this.style.fontSize = "0px";
+    };
     //el2.style.display = "none";
     let el4 = document.createElement("option");
     el4.value = "none";
@@ -110,7 +115,7 @@ for (let t in pickPhase2) {
 
 let field = document.getElementById("field1");
 
-field.ondragover = function (event) {//field onDregOver event
+field.ondragover = function (event) {//field onDragOver event
   if (!targetEl) return 0;
   if (event.altKey) {
     targetEl.ban();
