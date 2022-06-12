@@ -22,6 +22,7 @@ const Line = class LinkBetweenCyrcles {
     _parentField;
     _DOMElement;
     _alpha;
+    _power;
     constructor (parentDOM, cyrcle1, cyrcle2, power) {
         if (parentDOM===undefined||cyrcle1===undefined||cyrcle2===undefined||power===undefined) throw "LinkBetweenCyrcles: whrong args";
         this._DOMElement = document.createElement("div");
@@ -31,17 +32,20 @@ const Line = class LinkBetweenCyrcles {
         cyrcle2.lines.push(this);
         this._parentField = parentDOM;
         this._parentField.appendChild(this._DOMElement);
+        this._power = power;
         this.style.height = (1.6 + power*0.8).toString() + "px";
         this._alpha = (power/(1+power*2)*2-0.2)
         this.status = "normal";
         this.classList.add("line");
         this.update();
     };
+
     update () {
         this.pos = this.c1.pos;
         this.style.width = (((this.c1.x-this.c2.x)**2 + (this.c1.y-this.c2.y)**2)**0.5).toString() + "px";
         this.rotate = ((this.c1.x>=this.c2.x) * Math.PI)+Math.atan((this.c1.y-this.c2.y)/(this.c1.x-this.c2.x));
     };
+
     set status (val) {switch (val) {
         case "picked":
             this.style.backgroundColor = "rgba(0, 255, 0, " + this.a.toString() + ")";
@@ -53,6 +57,7 @@ const Line = class LinkBetweenCyrcles {
             this.style.backgroundColor = "rgba(255, 255, 255, " + this.a.toString() + ")";
             break;
     }};
+
     get c1 () {return this._parentCyrcle1};
     get c2 () {return this._parentCyrcle2};
     get field () {return this._parentField};
@@ -90,13 +95,22 @@ function onDragOverEvent (event) {//field onDragOver event
 function selectOnChange () {
     this.style.backgroundImage = allHeroes[Object.keys(allHeroes)[this.selectedIndex-1]];
     this.style.fontSize = "0px";
+
     console.log(document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1]));
+    console.log(this.phase);
+    if (this.phase=="rb"||this.phase=="db"||this.phase=="dp") {
+        targetEl = document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1])[0];
+        onDragOverEvent({altKey:1,ctrlKey:0,x:0,y:0})
+    }
+    if (this.phase=="rp") {
+        targetEl = document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1])[0];
+        targetEl.style.visibility = "hidden";
+        let r = this.getBoundingClientRect();
+        onDragOverEvent({altKey:0,ctrlKey:1,x:r.x+r.width/2,y:r.y+r.height/2})
+    }
 };
 
 let targetEl = null;
-
-
-
 
 let games1 = games[prompt('Выберите команду:')];
 let coef = prompt('Количество игр с героем, чтобы он отобразился на схеме');
@@ -151,10 +165,10 @@ if (fp == "2") {
 for (let t in pickPhase2) {
     pickPhase2[t].forEach((item, i) => {
         let el = document.createElement("li");
-        el.classList.add(t);
         document.getElementById(t).appendChild(el);
         let el2 = document.createElement("select");
         el2.classList.add("select-in-picks");
+        el2.phase = t;
         el2.onchange = selectOnChange;
         //el2.style.display = "none";
         let el4 = document.createElement("option");
