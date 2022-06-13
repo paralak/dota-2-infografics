@@ -1,8 +1,12 @@
 * {
   margin: 0;
   box-sizing: border-box;
+}
+
+body {
   overflow: hidden;
 }
+
 
 ul {
   padding: 0;
@@ -32,24 +36,49 @@ ul {
 
 
 .radiant .ban li, .dire .ban li {
+  position: relative;
   display: inline-block;
   height:36px;
   width:64px;
   background: rgb(2,0,36);
   background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
   margin: 0 8px 16px;
-  font-size: 160%;
-  color: #ccc;
-  line-height: 1.55;
-  text-align: center;
-  font-family: 'Bebas Neue', cursive;
   user-select: none;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
 }
 
 .radiant, .dire {
   /* border: 1px solid black; */
   display:inline-block;
-  visibility: hidden;
+}
+
+.select-in-picks {
+  height: 100%;
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
+  color: #ccc;
+  line-height: 1.55;
+  text-align: center;
+  font-family: 'Bebas Neue', cursive;
+  font-size: 100%;
+  user-select: none;
+  background-size: 100%;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.select-in-picks::-ms-expand {
+  display: none;
+}
+
+
+.select-in-picks option {
+  font-size: 24px;
 }
 
 .dire {
@@ -62,13 +91,9 @@ ul {
   width:96px;
   background: rgb(2,0,36);
   background: linear-gradient(142deg, rgba(2,0,36,1) 0%, rgba(48,48,48,1) 100%, rgba(0,212,255,1) 100%);
+  font-size: 260%;
   margin: 0 8px;
-  font-size: 240%;
-  color: #ccc;
-  line-height: 1.55;
-  text-align: center;
-  font-family: 'Bebas Neue', cursive;
-  user-select: none;
+  position: relative;
 }
 
 .banned {
