@@ -1,12 +1,12 @@
 function pick () {
-    this.classList.add("picked")
+    this.classList.add("picked");
     this.lines.forEach((item, i) => {
         item.status = "picked";
     });
 };
 
 function ban () {
-    this.classList.add("banned")
+    this.classList.add("banned");
     this.lines.forEach((item, i) => {
         item.status = "banned";
     });
@@ -16,25 +16,29 @@ function onDragStart (event) {
     targetEl = this;
 };
 
+const Cyrcle = class HeroCyrcle {
+
+}
+
 const Line = class LinkBetweenCyrcles {
-    _parentCyrcle1;
-    _parentCyrcle2;
-    _parentField;
-    _DOMElement;
-    _alpha;
-    _power;
+    #parentCyrcle1;
+    #parentCyrcle2;
+    #parentField;
+    #DOMElement;
+    #alpha;
+    #power;
     constructor (parentDOM, cyrcle1, cyrcle2, power) {
         if (parentDOM===undefined||cyrcle1===undefined||cyrcle2===undefined||power===undefined) throw "LinkBetweenCyrcles: whrong args";
-        this._DOMElement = document.createElement("div");
-        this._parentCyrcle1 = cyrcle1;
+        this.#DOMElement = document.createElement("div");
+        this.#parentCyrcle1 = cyrcle1;
         cyrcle1.lines.push(this);
-        this._parentCyrcle2 = cyrcle2;
+        this.#parentCyrcle2 = cyrcle2;
         cyrcle2.lines.push(this);
-        this._parentField = parentDOM;
-        this._parentField.appendChild(this._DOMElement);
-        this._power = power;
+        this.#parentField = parentDOM;
+        this.#parentField.appendChild(this.#DOMElement);
+        this.#power = power;
         this.style.height = (1.6 + power*0.8).toString() + "px";
-        this._alpha = (power/(1+power*2)*2-0.2)
+        this.#alpha = (power/(1+power*2)*2-0.35);
         this.status = "normal";
         this.classList.add("line");
         this.update();
@@ -58,16 +62,16 @@ const Line = class LinkBetweenCyrcles {
             break;
     }};
 
-    get c1 () {return this._parentCyrcle1};
-    get c2 () {return this._parentCyrcle2};
-    get field () {return this._parentField};
-    get a () {return this._alpha};
-    get DOM () {return this._DOMElement};
-    get style () {return this._DOMElement.style};
-    get classList () {return this._DOMElement.classList};
+    get c1 () {return this.#parentCyrcle1};
+    get c2 () {return this.#parentCyrcle2};
+    get field () {return this.#parentField};
+    get a () {return this.#alpha};
+    get DOM () {return this.#DOMElement};
+    get style () {return this.#DOMElement.style};
+    get classList () {return this.#DOMElement.classList};
     set pos (val) {this.style.left = val[0]+"px"; this.style.top = val[1]+"px"};
     set rotate (val) {this.style.transform = "rotate(" + val.toString() + "rad)"};
-}
+};
 
 function onDragEnd (event) {
     targetEl = null;
@@ -93,17 +97,18 @@ function onDragOverEvent (event) {//field onDragOver event
 };
 
 function selectOnChange () {
-    this.style.backgroundImage = allHeroes[Object.keys(allHeroes)[this.selectedIndex-1]];
+    this.style.backgroundImage = allHeroes[this.value];
     this.style.fontSize = "0px";
 
-    console.log(document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1]));
+    console.log(document.getElementsByClassName("hero-" + this.value));
     console.log(this.phase);
+    console.log(this);
     if (this.phase=="rb"||this.phase=="db"||this.phase=="dp") {
-        targetEl = document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1])[0];
-        onDragOverEvent({altKey:1,ctrlKey:0,x:0,y:0})
-    }
-    if (this.phase=="rp") {
-        targetEl = document.getElementsByClassName("hero-" + Object.keys(allHeroes)[this.selectedIndex-1])[0];
+        targetEl = document.getElementsByClassName("hero-" + this.value)[0];
+        onDragOverEvent({altKey:1,ctrlKey:0,x:0,y:0});
+    };
+    if (this.phase=="rp" && document.getElementsByClassName("hero-" + this.value)[0]) {
+        targetEl = document.getElementsByClassName("hero-" + this.value)[0];
         targetEl.style.visibility = "hidden";
         let r = this.getBoundingClientRect();
         onDragOverEvent({altKey:0,ctrlKey:1,x:r.x+r.width/2,y:r.y+r.height/2})
@@ -120,13 +125,12 @@ const heroes = {};
 
 games1.forEach((item,i) => {
     item.forEach((her,i) => {
-        if (!(her in heroes)) {
-            heroes[her] = {}}
+        if (!(her in heroes)) {heroes[her] = {}};
         item.forEach((her2,i) => {
             if (!(her2 in heroes[her])) {
-                heroes[her][her2] = 0
-            }
-            heroes[her][her2]+=1
+                heroes[her][her2] = 0;
+            };
+            heroes[her][her2]+=1;
         })
     })
 });
@@ -160,7 +164,7 @@ if (fp == "2") {
         rp:pickPhase.fppick,
         rb:pickPhase.fpban
     }
-}
+};
 
 for (let t in pickPhase2) {
     pickPhase2[t].forEach((item, i) => {
